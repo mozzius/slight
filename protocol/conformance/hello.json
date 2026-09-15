@@ -1,0 +1,13 @@
+{
+  "type": "hello",
+  "v": 1,
+  "client_id": "conformance-client",
+  "client_name": "Conformance",
+  "client_version": "1.0.0",
+  "device_id": "device-1",
+  "credential": "dev",
+  "resume": {
+    "session_id": "s-1",
+    "last_event_sequence": 3
+  }
+}

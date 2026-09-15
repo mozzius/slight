@@ -1,0 +1,132 @@
+{
+  "type": "ack",
+  "v": 1,
+  "request_id": "req-rich",
+  "ok": true,
+  "result": {
+    "session": {
+      "id": "s-rich",
+      "title": "Rich content session",
+      "agent": "fake",
+      "model": "auto",
+      "effort": "medium",
+      "working_directory_label": "~/work/slight",
+      "status": "working",
+      "created_at": "2026-01-01T00:00:00Z",
+      "last_activity_at": "2026-01-01T00:00:02Z",
+      "last_sequence": 2
+    },
+    "agent": {
+      "kind": "fake",
+      "display_name": "Fake ACP agent",
+      "version": "0.1.0"
+    },
+    "acp": {
+      "protocol_version": 1,
+      "agent": {
+        "name": "fake-acp-agent",
+        "title": "Fake ACP agent",
+        "version": "0.1.0"
+      },
+      "auth_methods": [],
+      "capabilities": {
+        "load_session": false,
+        "prompt_image": true,
+        "prompt_audio": true,
+        "prompt_embedded_context": true,
+        "mcp_http": false,
+        "mcp_sse": false,
+        "session_list": false,
+        "session_resume": false,
+        "session_close": false,
+        "session_delete": false,
+        "session_additional_directories": false
+      },
+      "modes": null
+    },
+    "running": true,
+    "pending_permission": null,
+    "recent_events": [
+      {
+        "v": 1,
+        "session_id": "s-rich",
+        "sequence": 1,
+        "event": "session.message",
+        "at": "2026-01-01T00:00:01Z",
+        "payload": {
+          "role": "assistant",
+          "text": "here is the screenshot",
+          "blocks": [
+            {
+              "id": "block-image",
+              "kind": "image",
+              "text": "",
+              "language": null,
+              "mime_type": "image/png",
+              "data_base64": "iVBORw0KGgo=",
+              "uri": "file:///tmp/screenshot.png"
+            },
+            {
+              "id": "block-link",
+              "kind": "resource_link",
+              "text": "",
+              "language": null,
+              "uri": "file:///work/src/main.rs",
+              "name": "src/main.rs",
+              "mime_type": "text/x-rust",
+              "title": "main.rs",
+              "size": 120
+            },
+            {
+              "id": "block-resource",
+              "kind": "resource_text",
+              "text": "fn main() {}",
+              "language": null,
+              "uri": "file:///work/src/main.rs",
+              "mime_type": "text/x-rust"
+            }
+          ]
+        }
+      },
+      {
+        "v": 1,
+        "session_id": "s-rich",
+        "sequence": 2,
+        "event": "session.tool_call",
+        "at": "2026-01-01T00:00:02Z",
+        "payload": {
+          "id": "tool-1",
+          "title": "edit_file",
+          "kind": "edit",
+          "status": "in_progress",
+          "detail": "/tmp/work/src/main.rs:12",
+          "content": [
+            {
+              "type": "content",
+              "id": "tool-block-text",
+              "kind": "text",
+              "text": "patching main.rs",
+              "language": null
+            },
+            {
+              "type": "diff",
+              "path": "/tmp/work/src/main.rs",
+              "old_text": "fn main() {}",
+              "new_text": "fn main() { run() }"
+            },
+            {
+              "type": "terminal",
+              "terminal_id": "term-1"
+            }
+          ],
+          "locations": [
+            { "path": "/tmp/work/src/main.rs", "line": 12 }
+          ],
+          "raw_input": { "path": "/tmp/work/src/main.rs" },
+          "raw_output": { "exit": 0 }
+        }
+      }
+    ]
+  },
+  "error": null
+}

@@ -1,0 +1,128 @@
+name: ACP bundles
+
+# Build the self-contained Claude Agent ACP and Codex ACP bundles from their
+# pinned inputs and smoke test both brokers with no global npm installation.
+#
+# The workflow is reusable (`workflow_call`) so a release pipeline can gate on
+# the same build and smoke test before shipping a macOS host.
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  push:
+    branches: [main]
+    paths:
+      - "packaging/**"
+      - "scripts/*acp*.sh"
+      - "rust/acp-adapters/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/codex-acp-bundle.yml"
+  pull_request:
+    paths:
+      - "packaging/**"
+      - "scripts/*acp*.sh"
+      - "rust/acp-adapters/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/codex-acp-bundle.yml"
+
+concurrency:
+  group: acp-bundles-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  bundle:
+    name: build + smoke (macOS)
+    # macos-14 is arm64. The bundle script only downloads and unpacks artifacts,
+    # so the same job cross-builds the x86_64 bundle; execution smoke coverage
+    # runs for the runner's native (arm64) bundle.
+    runs-on: macos-14
+    timeout-minutes: 30
+    env:
+      CARGO_TERM_COLOR: always
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build self-contained ACP bundles (arm64 + x64)
+        run: |
+          ./scripts/package-acp-bundles.sh \
+            --target aarch64-apple-darwin \
+            --target x86_64-apple-darwin
+
+      - name: Verify bundle sidecars and architecture
+        run: |
+          set -euo pipefail
+          for triple in aarch64-apple-darwin x86_64-apple-darwin; do
+            dir="vendor/codex-acp/$triple"
+            test -x "$dir/bin/node"
+            test -x "$dir/bin/codex"
+            test -f "$dir/lib/codex-acp/index.js"
+            test -f "$dir/bundle.json"
+            test -f "$dir/NOTICE"
+            test -f "$dir/licenses/LICENSE.node"
+            test -f "$dir/licenses/LICENSE.codex-acp"
+            test -f "$dir/licenses/LICENSE.openai-codex"
+            jq -e '.components.codex_acp.version == "1.11.0"' "$dir/bundle.json" >/dev/null
+            jq -e '.components.codex.version | startswith("0.153.4")' "$dir/bundle.json" >/dev/null
+            jq -e '.components.node.version == "24.19.0"' "$dir/bundle.json" >/dev/null
+          done
+          file vendor/codex-acp/aarch64-apple-darwin/bin/node | grep -q arm64
+          file vendor/codex-acp/x86_64-apple-darwin/bin/node | grep -q x86_64
+
+      - name: Smoke test bundled broker (no global npm/Bun/codex-acp)
+        env:
+          SLIGHT_CODEX_ACP_SMOKE: "1"
+          SLIGHT_CODEX_BUNDLE_DIR: ${{ github.workspace }}/vendor/codex-acp/aarch64-apple-darwin
+        run: cargo test -p acp-adapters --test codex_bundle_smoke -- --nocapture
+
+      - name: Verify Claude bundle sidecars and architecture
+        run: |
+          set -euo pipefail
+          for triple in aarch64-apple-darwin x86_64-apple-darwin; do
+            dir="vendor/claude-agent-acp/$triple"
+            test -x "$dir/bin/node"
+            test -f "$dir/lib/claude-agent-acp/dist/index.js"
+            test -f "$dir/node_modules/@anthropic-ai/claude-agent-sdk/sdk.mjs"
+            test -f "$dir/bundle.json"
+            test -f "$dir/NOTICE"
+            test -d "$dir/licenses"
+            jq -e '.components.claude_acp.version == "0.76.0"' "$dir/bundle.json" >/dev/null
+            jq -e '.components.claude_agent_sdk.version == "0.3.257"' "$dir/bundle.json" >/dev/null
+            jq -e '.components.node.version == "24.19.0"' "$dir/bundle.json" >/dev/null
+          done
+          file vendor/claude-agent-acp/aarch64-apple-darwin/bin/node | grep -q arm64
+          file vendor/claude-agent-acp/x86_64-apple-darwin/bin/node | grep -q x86_64
+
+      - name: Smoke test bundled Claude broker (no global npm)
+        env:
+          SLIGHT_CLAUDE_ACP_SMOKE: "1"
+          SLIGHT_CLAUDE_CODE_BUNDLE_DIR: ${{ github.workspace }}/vendor/claude-agent-acp/aarch64-apple-darwin
+        run: cargo test -p acp-adapters --test claude_bundle_smoke -- --nocapture
+
+      - name: Run adapter resolution tests
+        run: cargo test -p acp-adapters --lib
+
+      - name: Upload bundle provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acp-bundle-provenance
+          path: |
+            vendor/codex-acp/*/bundle.json
+            vendor/codex-acp/*/NOTICE
+            vendor/codex-acp/*/licenses/
+            vendor/claude-agent-acp/*/bundle.json
+            vendor/claude-agent-acp/*/NOTICE
+            vendor/claude-agent-acp/*/licenses/
+          if-no-files-found: error
+          retention-days: 14

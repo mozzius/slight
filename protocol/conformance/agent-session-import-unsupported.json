@@ -1,0 +1,12 @@
+{
+  "type": "ack",
+  "v": 1,
+  "request_id": "req-import",
+  "ok": false,
+  "result": null,
+  "error": {
+    "code": "unsupported_capability",
+    "message": "agent does not support session/load",
+    "retryable": false
+  }
+}

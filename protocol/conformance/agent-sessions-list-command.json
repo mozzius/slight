@@ -1,0 +1,12 @@
+{
+  "type": "command",
+  "v": 1,
+  "request_id": "req-discover",
+  "command": "agent.sessions.list",
+  "session_id": null,
+  "params": {
+    "agent": "fake",
+    "working_directory_label": "~/work/slight",
+    "cursor": "cursor-1"
+  }
+}

@@ -1,0 +1,8 @@
+/target
+**/*.rs.bk
+.DS_Store
+
+# Self-contained Codex ACP bundles produced by scripts/bundle-codex-acp.sh.
+# These are multi-hundred-MB build artifacts; pin inputs live in
+# packaging/codex-acp/versions.env and provenance is regenerated per build.
+/vendor/

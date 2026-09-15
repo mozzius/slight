@@ -1,0 +1,14 @@
+{
+  "type": "command",
+  "v": 1,
+  "request_id": "req-import",
+  "command": "agent.sessions.import",
+  "session_id": null,
+  "params": {
+    "agent": "fake",
+    "agent_session_id": "fake-listed-1",
+    "working_directory_label": "~/work/slight",
+    "recovery": "load",
+    "title": "Imported fake session"
+  }
+}

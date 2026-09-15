@@ -1,0 +1,17 @@
+[package]
+name = "host-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "acp-host"
+path = "src/main.rs"
+
+[dependencies]
+gateway-protocol.workspace = true
+gateway-server.workspace = true
+host-service.workspace = true
+serde.workspace = true
+serde_json.workspace = true

@@ -1,0 +1,153 @@
+{
+  "type": "ack",
+  "v": 1,
+  "request_id": "req-inspect",
+  "ok": true,
+  "result": {
+    "session": {
+      "id": "s-1",
+      "title": "Conformance session",
+      "agent": "fake",
+      "model": "auto",
+      "effort": "medium",
+      "working_directory_label": "~/work/slight",
+      "status": "idle",
+      "created_at": "2026-01-01T00:00:00Z",
+      "last_activity_at": "2026-01-01T00:00:05Z",
+      "last_sequence": 7
+    },
+    "agent": {
+      "kind": "fake",
+      "display_name": "Fake ACP agent",
+      "version": "0.1.0"
+    },
+    "acp": {
+      "protocol_version": 1,
+      "agent": {
+        "name": "fake-acp-agent",
+        "title": "Fake ACP agent",
+        "version": "0.1.0"
+      },
+      "auth_methods": [
+        {
+          "id": "device",
+          "name": "Device login",
+          "description": "Approve this device from the agent",
+          "kind": "agent"
+        }
+      ],
+      "capabilities": {
+        "load_session": false,
+        "prompt_image": true,
+        "prompt_audio": false,
+        "prompt_embedded_context": false,
+        "mcp_http": true,
+        "mcp_sse": false,
+        "session_list": true,
+        "session_resume": false,
+        "session_close": false,
+        "session_delete": false,
+        "session_additional_directories": false
+      },
+      "modes": {
+        "current_mode_id": "plan",
+        "available_modes": [
+          { "id": "plan", "name": "Plan", "description": null },
+          { "id": "build", "name": "Build", "description": "Make changes" }
+        ]
+      },
+      "config_options": [
+        {
+          "id": "model",
+          "name": "Model",
+          "description": "Pick a model",
+          "category": "model",
+          "kind": {
+            "kind": "select",
+            "current_value_id": "fast",
+            "groups": [
+              {
+                "id": null,
+                "name": null,
+                "options": [
+                  { "value_id": "fast", "name": "Fast", "description": null },
+                  { "value_id": "smart", "name": "Smart", "description": "slower" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "brave_mode",
+          "name": "Brave Mode",
+          "description": null,
+          "category": null,
+          "kind": { "kind": "boolean", "current_value": false }
+        }
+      ]
+    },
+    "running": true,
+    "pending_permission": null,
+    "recent_events": [
+      {
+        "v": 1,
+        "session_id": "s-1",
+        "sequence": 3,
+        "event": "session.plan",
+        "at": "2026-01-01T00:00:03Z",
+        "payload": {
+          "entries": [
+            { "content": "write tests", "priority": "high", "status": "in_progress" }
+          ]
+        }
+      },
+      {
+        "v": 1,
+        "session_id": "s-1",
+        "sequence": 4,
+        "event": "session.mode",
+        "at": "2026-01-01T00:00:04Z",
+        "payload": { "current_mode_id": "plan" }
+      },
+      {
+        "v": 1,
+        "session_id": "s-1",
+        "sequence": 5,
+        "event": "session.config_options",
+        "at": "2026-01-01T00:00:04Z",
+        "payload": {
+          "options": [
+            {
+              "id": "brave_mode",
+              "name": "Brave Mode",
+              "description": null,
+              "category": null,
+              "kind": { "kind": "boolean", "current_value": true }
+            }
+          ]
+        }
+      },
+      {
+        "v": 1,
+        "session_id": "s-1",
+        "sequence": 6,
+        "event": "session.usage",
+        "at": "2026-01-01T00:00:04Z",
+        "payload": {
+          "used": 1024,
+          "size": 200000,
+          "cost": { "amount": 0.02, "currency": "USD" }
+        }
+      },
+      {
+        "v": 1,
+        "session_id": "s-1",
+        "sequence": 7,
+        "event": "session.turn_ended",
+        "at": "2026-01-01T00:00:05Z",
+        "payload": { "stop_reason": "end_turn" }
+      }
+    ]
+  },
+  "error": null
+}

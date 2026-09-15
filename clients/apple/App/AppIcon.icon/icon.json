@@ -1,0 +1,32 @@
+{
+  "fill-specializations" : [
+    {
+      "value" : {
+        "solid" : "display-p3:0.02000,0.07000,0.05000,1.00000"
+      }
+    }
+  ],
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "Tree.png",
+          "name" : "Tree",
+          "position" : {
+            "scale" : 0.7,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "image-name" : "Background.svg",
+          "name" : "Background"
+        }
+      ],
+      "name" : "Symbol",
+      "specular" : true
+    }
+  ]
+}
